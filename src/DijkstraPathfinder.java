@@ -2,6 +2,10 @@ import java.util.*;
 
 //https://www.youtube.com/watch?v=BuvKtCh0SKk
 //https://www.baeldung.com/java-dijkstra
+import java.util.*;
+
+import java.util.*;
+
 public class DijkstraPathfinder {
     private Grid grid;
 
@@ -37,17 +41,19 @@ public class DijkstraPathfinder {
                     continue;
                 }
 
-                double tentativeGCost = current.getgCost() + 1;
+                double tentativeGCost = current.getgCost() + 1; // Koszt ruchu między węzłami
 
                 if (tentativeGCost < neighbor.getgCost()) {
                     neighbor.setgCost(tentativeGCost);
                     neighbor.setParentNode(current);
+
+                    openSet.remove(neighbor); // Usunięcie przed ponownym dodaniem
                     openSet.add(neighbor);
                 }
             }
         }
 
-        return Collections.emptyList(); // No path found
+        return Collections.emptyList(); // Brak ścieżki
     }
 
     private List<Node> reconstructPath(Node endNode) {
@@ -63,3 +69,4 @@ public class DijkstraPathfinder {
         return path;
     }
 }
+

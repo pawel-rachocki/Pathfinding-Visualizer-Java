@@ -4,29 +4,26 @@ public class Main {
     public static void main(String[] args) {
 
         //Just for testing
-        Grid grid = new Grid(10, 10);
+        Grid grid = new Grid(5, 5);
 
         grid.setStartNode(0, 0, true);
-        grid.setEndNode(9, 9, true);
+        grid.setEndNode(4, 4, true);
 
-        grid.getNode(1, 0).setObstacle(true);
-        grid.getNode(1, 1).setObstacle(true);
-        grid.getNode(1, 2).setObstacle(true);
         grid.getNode(2, 2).setObstacle(true);
         grid.getNode(3, 2).setObstacle(true);
 
-        DijkstraPathfinder pathfinder = new DijkstraPathfinder(grid);
+        AStarPathfinder pathfinder = new AStarPathfinder(grid,HeuristicType.MANHATTAN);
         List<Node> path = pathfinder.findPath();
-
-        if (path != null) {
-            System.out.println("Found Path:");
+        if (!path.isEmpty()) {
+            System.out.println("Znaleziono ścieżkę:");
             for (Node node : path) {
-                System.out.println("[" + node.getX() + ", " + node.getY() + "]");
+                System.out.println(" -> (" + node.getX() + ", " + node.getY() + ")");
             }
         } else {
-            System.out.println("Path not found.");
+            System.out.println("Nie znaleziono ścieżki.");
         }
-
         System.out.println(grid);
+
     }
 }
+

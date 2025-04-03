@@ -135,7 +135,7 @@ public class Grid {
 
         boolean pathFound = false;
         int attempts = 0;
-        while (!pathFound && attempts < 100) {
+        while (!pathFound && attempts < 200) {
             attempts++;
 
             // Reset Obstacles
@@ -157,7 +157,7 @@ public class Grid {
         }
 
         if (!pathFound) {
-            System.out.println("Couldn't generate path within 100 tries.");
+            System.out.println("Couldn't generate path within 200 tries.");
         }
     }
 
@@ -204,6 +204,8 @@ public class Grid {
         }
         return null;
     }
+
+    // Just for terminal testing
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

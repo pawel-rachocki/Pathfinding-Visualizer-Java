@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Grid {
     private Node[][] grid;
@@ -121,6 +122,45 @@ public class Grid {
     public Node[][] getGrid() {
         return grid;
     }
+
+    // Random Grid generation:
+    public void generateRandomObstacles(double obstacleProbability) {
+        Random random = new Random();
+        Node start = getStartNode();
+        Node end = getEndNode();
+
+        if (start == null || end == null) {
+            throw new IllegalStateException("Start or end node must be set before generating obstacles.");
+        }
+
+        boolean pathFound = false;
+        int attempts = 0;
+        while (!pathFound && attempts < 100) {
+            attempts++;
+
+            // Reset Obstacles
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    Node node = grid[y][x];
+                    if (!node.equals(start) && !node.equals(end)) {
+                        node.setObstacle(random.nextDouble() < obstacleProbability);
+                    } else {
+                        node.setObstacle(false);
+                    }
+                }
+            }
+
+            // Check if path exists
+            DijkstraPathfinder tester = new DijkstraPathfinder(this);
+            List<Node> testPath = tester.findPath();
+            pathFound = !testPath.isEmpty();
+        }
+
+        if (!pathFound) {
+            System.out.println("Couldn't generate path within 100 tries.");
+        }
+    }
+
 
     public void setGrid(Node[][] grid) {
         this.grid = grid;

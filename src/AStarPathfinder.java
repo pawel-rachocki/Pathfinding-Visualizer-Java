@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.function.Consumer;
 
 //https://www.baeldung.com/java-a-star-pathfinding
 enum HeuristicType {
@@ -8,6 +9,7 @@ enum HeuristicType {
 public class AStarPathfinder {
     private Grid grid;
     private HeuristicType heuristicType;
+    private Consumer<Node> visitedCallback;
 
     public AStarPathfinder(Grid grid, HeuristicType heuristicType) {
         this.grid = grid;
@@ -84,6 +86,10 @@ public class AStarPathfinder {
 
         Collections.reverse(path);
         return path;
+    }
+
+    public void setVisitedCallback(Consumer<Node> callback) {
+        this.visitedCallback = callback;
     }
 }
 

@@ -5,9 +5,11 @@ import java.util.*;
 import java.util.*;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 public class DijkstraPathfinder {
     private Grid grid;
+    private Consumer<Node> visitedCallback;
 
     public DijkstraPathfinder(Grid grid) {
         this.grid = grid;
@@ -67,6 +69,9 @@ public class DijkstraPathfinder {
 
         Collections.reverse(path);
         return path;
+    }
+    public void setVisitedCallback(Consumer<Node> callback) {
+        this.visitedCallback = callback;
     }
 }
 

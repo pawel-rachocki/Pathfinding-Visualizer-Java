@@ -25,7 +25,7 @@ public class PathFindApp extends Application{
                 rect.setStroke(Color.GRAY);
                 int finalX = x;
                 int finalY = y;
-                rect.setOnMouseClicked(mouseEvent -> );
+                rect.setOnMouseClicked(mouseEvent -> handleCellClick(finalX,finalY));
                 nodes[y][x] = rect;
                 gridPane.add(rect,x,y);
             }
@@ -35,8 +35,41 @@ public class PathFindApp extends Application{
         Button generateButton = new Button("Generate Grid");
         // TODO - Add action
 
-
-
+        // Scene for Grid
+        Scene scene = new Scene(gridPane, SIZE * NODE_SIZE, SIZE * NODE_SIZE);
+        stage.setScene(scene);
+        stage.setTitle("PathFinder Visualization");
+        stage.show();
 
     }
+    private void handleCellClick(int x, int y){
+        Node node = grid.getNode(x,y);
+        if (!node.isObstacle()){
+            node.setObstacle(true);
+            nodes[y][x].setFill(Color.BLACK);
+        }else{
+            node.setObstacle(false);
+            nodes[y][x].setFill(Color.WHITE);
+        }
+    }
+
+    private void generateRandomGrid(){
+        grid.generateRandomObstacles(0.3);
+        updateGrid();
+    }
+
+    private void updateGrid(){
+        for (int y = 0; y < SIZE; y++){
+            for (int x = 0; x < SIZE; x++){
+                Node node = grid.getNode(x,y);
+                if(node.isObstacle()){
+                    nodes[y][x].setFill(Color.BLACK);
+                }else{
+                    nodes[y][x].setFill(Color.WHITE);
+                }
+            }
+        }
+    }
+
+
 }

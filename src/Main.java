@@ -4,13 +4,12 @@ public class Main {
     public static void main(String[] args) {
 
         //Just for testing
-        Grid grid = new Grid(5, 5);
+        Grid grid = new Grid(20, 20);
 
         grid.setStartNode(0, 0, true);
-        grid.setEndNode(4, 4, true);
+        grid.setEndNode(19, 19, true);
 
-        grid.getNode(2, 2).setObstacle(true);
-        grid.getNode(3, 2).setObstacle(true);
+        grid.generateRandomObstacles(0.3);
 
         AStarPathfinder pathfinder = new AStarPathfinder(grid,HeuristicType.MANHATTAN);
         List<Node> path = pathfinder.findPath();

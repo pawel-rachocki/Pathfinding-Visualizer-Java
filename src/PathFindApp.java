@@ -76,7 +76,7 @@ public class PathFindApp extends Application {
         runDijkstraButton.setOnAction(e -> runPathfinding(new DijkstraPathfinder(grid)));
 
         Button runAStarButton = new Button("Run A*");
-        runAStarButton.setOnAction(e -> runPathfinding(new AStarPathfinder(grid, HeuristicType.MANHATTAN)));
+        runAStarButton.setOnAction(e -> runPathfinding(new AStarPathfinder(grid, HeuristicType.EUCLIDEAN)));
 
         controlPanel.getChildren().addAll(runDijkstraButton, runAStarButton);
 

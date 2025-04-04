@@ -64,7 +64,7 @@ public class AStarPathfinder {
                     neighbor.sethCost(calculateHeuristic(neighbor, endNode));
                     neighbor.setParentNode(current);
 
-                    // Zawsze dodaj ponownie do kolejki (PriorityQueue nie aktualizuje priorytetów!)
+
                     openSet.remove(neighbor);
                     openSet.add(neighbor);
                 }

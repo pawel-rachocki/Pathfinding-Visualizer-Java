@@ -11,6 +11,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +26,11 @@ enum InteractionMode {
 }
 
 public class PathFindApp extends Application {
-    private static final int SIZE = 20; // Grid size
+    private int gridSize = 20;
+    // Grid size
     private static final int NODE_SIZE = 30;
-    private Grid grid = new Grid(SIZE, SIZE);
-    private Rectangle[][] nodes = new Rectangle[SIZE][SIZE];
+    private Grid grid;
+    private Rectangle[][] nodes;
 
     private InteractionMode mode = InteractionMode.TOGGLE_OBSTACLE;
     private Node startNode = null;
@@ -34,10 +38,15 @@ public class PathFindApp extends Application {
 
     @Override
     public void start(Stage stage) {
+
         // Grid
         GridPane gridPane = new GridPane();
-        for (int y = 0; y < SIZE; y++) {
-            for (int x = 0; x < SIZE; x++) {
+
+        grid = new Grid(gridSize, gridSize);
+        nodes = new Rectangle[gridSize][gridSize];
+
+        for (int y = 0; y < gridSize; y++) {
+            for (int x = 0; x < gridSize; x++) {
                 Rectangle rect = new Rectangle(NODE_SIZE, NODE_SIZE);
                 rect.setFill(Color.WHITE);
                 rect.setStroke(Color.GRAY);
@@ -48,6 +57,26 @@ public class PathFindApp extends Application {
                 gridPane.add(rect, x, y);
             }
         }
+        
+        Label sizeLabel = new Label("Grid Size:");
+        TextField sizeField = new TextField(String.valueOf(gridSize));
+        sizeField.setMaxWidth(60);
+
+        Button applySizeButton = new Button("Apply Size");
+        applySizeButton.setOnAction(e -> {
+            try {
+                int newSize = Integer.parseInt(sizeField.getText());
+                if (newSize < 5 || newSize > 100) {
+                    System.out.println("Size must be between 5 and 100");
+                    return;
+                }
+                gridSize = newSize;
+                resetGrid(gridPane);
+            } catch (NumberFormatException ex) {
+                System.out.println("Invalid number");
+            }
+        });
+
 
         // Generate random grid button
         Button generateButton = new Button("Generate Grid");
@@ -69,6 +98,9 @@ public class PathFindApp extends Application {
         Button setEndButton = new Button("Set End Point");
         setEndButton.setOnAction(e -> mode = InteractionMode.SET_END);
 
+        Button resetButton = new Button("Reset Grid");
+        resetButton.setOnAction(e -> resetGrid(gridPane));
+
         Button obstacleButton = new Button("Add/Delete obstacles");
         obstacleButton.setOnAction(e -> mode = InteractionMode.TOGGLE_OBSTACLE);
 
@@ -79,9 +111,8 @@ public class PathFindApp extends Application {
         runAStarButton.setOnAction(e -> runPathfinding(new AStarPathfinder(grid, HeuristicType.EUCLIDEAN)));
 
         controlPanel.getChildren().addAll(runDijkstraButton, runAStarButton);
-
-
-        controlPanel.getChildren().addAll(setStartButton, setEndButton, obstacleButton, generateButton);
+        controlPanel.getChildren().addAll(sizeLabel, sizeField, applySizeButton);
+        controlPanel.getChildren().addAll(setStartButton, setEndButton, obstacleButton, generateButton, resetButton);
 
         HBox root = new HBox(controlPanel, gridPane);
         Scene scene = new Scene(root);
@@ -196,5 +227,27 @@ public class PathFindApp extends Application {
 
         timeline.play();
     }
+    private void resetGrid(GridPane gridPane) {
+        grid = new Grid(gridSize, gridSize);
+        nodes = new Rectangle[gridSize][gridSize];
+        startNode = null;
+        endNode = null;
+
+        gridPane.getChildren().clear();
+
+        for (int y = 0; y < gridSize; y++) {
+            for (int x = 0; x < gridSize; x++) {
+                Rectangle rect = new Rectangle(NODE_SIZE, NODE_SIZE);
+                rect.setFill(Color.WHITE);
+                rect.setStroke(Color.GRAY);
+                int finalX = x;
+                int finalY = y;
+                rect.setOnMouseClicked(mouseEvent -> handleCellClick(finalX, finalY));
+                nodes[y][x] = rect;
+                gridPane.add(rect, x, y);
+            }
+        }
+    }
+
 
 }

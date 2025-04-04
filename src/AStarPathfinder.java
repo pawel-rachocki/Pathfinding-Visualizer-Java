@@ -1,7 +1,6 @@
 import java.util.*;
 import java.util.function.Consumer;
 
-//https://www.baeldung.com/java-a-star-pathfinding
 enum HeuristicType {
     MANHATTAN, EUCLIDEAN
 }
@@ -24,6 +23,16 @@ public class AStarPathfinder {
             throw new IllegalStateException("Start or End node is not set.");
         }
 
+        // Reset gCost and parent for all nodes
+        for (int y = 0; y < grid.getHeight(); y++) {
+            for (int x = 0; x < grid.getWidth(); x++) {
+                Node node = grid.getNode(x, y);
+                node.setgCost(Double.POSITIVE_INFINITY);
+                node.sethCost(0);
+                node.setParentNode(null);
+            }
+        }
+
         PriorityQueue<Node> openSet = new PriorityQueue<>(Comparator.comparingDouble(Node::getfCost));
         Set<Node> closedSet = new HashSet<>();
 
@@ -33,10 +42,10 @@ public class AStarPathfinder {
 
         while (!openSet.isEmpty()) {
             Node current = openSet.poll();
+
             if (visitedCallback != null) {
                 visitedCallback.accept(current);
             }
-
 
             if (current.equals(endNode)) {
                 return reconstructPath(endNode);
@@ -55,11 +64,9 @@ public class AStarPathfinder {
                     neighbor.sethCost(calculateHeuristic(neighbor, endNode));
                     neighbor.setParentNode(current);
 
-                    // Update queue
-                    if (!openSet.contains(neighbor) || tentativeGCost < neighbor.getgCost()) {
-                        openSet.remove(neighbor);
-                        openSet.add(neighbor);
-                    }
+                    // Zawsze dodaj ponownie do kolejki (PriorityQueue nie aktualizuje priorytetów!)
+                    openSet.remove(neighbor);
+                    openSet.add(neighbor);
                 }
             }
         }
@@ -98,4 +105,3 @@ public class AStarPathfinder {
         this.visitedCallback = callback;
     }
 }
-

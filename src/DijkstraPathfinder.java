@@ -26,11 +26,20 @@ public class DijkstraPathfinder {
         PriorityQueue<Node> openSet = new PriorityQueue<>(Comparator.comparingDouble(Node::getgCost));
         Set<Node> closedSet = new HashSet<>();
 
+
+        for (int y = 0; y < grid.getHeight(); y++) {
+            for (int x = 0; x < grid.getWidth(); x++) {
+                grid.getNode(x, y).setgCost(Double.POSITIVE_INFINITY);
+            }
+        }
         startNode.setgCost(0);
         openSet.add(startNode);
 
         while (!openSet.isEmpty()) {
             Node current = openSet.poll();
+            if (visitedCallback != null) {
+                visitedCallback.accept(current);
+            }
 
             if (current.equals(endNode)) {
                 return reconstructPath(endNode);

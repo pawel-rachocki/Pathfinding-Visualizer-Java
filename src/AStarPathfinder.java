@@ -33,6 +33,10 @@ public class AStarPathfinder {
 
         while (!openSet.isEmpty()) {
             Node current = openSet.poll();
+            if (visitedCallback != null) {
+                visitedCallback.accept(current);
+            }
+
 
             if (current.equals(endNode)) {
                 return reconstructPath(endNode);
@@ -52,8 +56,10 @@ public class AStarPathfinder {
                     neighbor.setParentNode(current);
 
                     // Update queue
-                    openSet.remove(neighbor);
-                    openSet.add(neighbor);
+                    if (!openSet.contains(neighbor) || tentativeGCost < neighbor.getgCost()) {
+                        openSet.remove(neighbor);
+                        openSet.add(neighbor);
+                    }
                 }
             }
         }

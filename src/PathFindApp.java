@@ -12,6 +12,9 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 enum InteractionMode {
     SET_START,
@@ -50,7 +53,7 @@ public class PathFindApp extends Application {
         Button generateButton = new Button("Generate Grid");
         generateButton.setOnAction(e -> {
             if (startNode == null || endNode == null) {
-                System.out.println("Najpierw ustaw punkt startowy i końcowy!");
+                System.out.println("Set start and end points first!");
                 return;
             }
             generateRandomGrid();
@@ -60,14 +63,23 @@ public class PathFindApp extends Application {
         VBox controlPanel = new VBox(10);
         controlPanel.setPadding(new Insets(10));
 
-        Button setStartButton = new Button("Ustaw Start");
+        Button setStartButton = new Button("Set Start Point");
         setStartButton.setOnAction(e -> mode = InteractionMode.SET_START);
 
-        Button setEndButton = new Button("Ustaw Koniec");
+        Button setEndButton = new Button("Set End Point");
         setEndButton.setOnAction(e -> mode = InteractionMode.SET_END);
 
-        Button obstacleButton = new Button("Dodaj/Usuń przeszkody");
+        Button obstacleButton = new Button("Add/Delete obstacles");
         obstacleButton.setOnAction(e -> mode = InteractionMode.TOGGLE_OBSTACLE);
+
+        Button runDijkstraButton = new Button("Run Dijkstra");
+        runDijkstraButton.setOnAction(e -> runPathfinding(new DijkstraPathfinder(grid)));
+
+        Button runAStarButton = new Button("Run A*");
+        runAStarButton.setOnAction(e -> runPathfinding(new AStarPathfinder(grid, HeuristicType.MANHATTAN)));
+
+        controlPanel.getChildren().addAll(runDijkstraButton, runAStarButton);
+
 
         controlPanel.getChildren().addAll(setStartButton, setEndButton, obstacleButton, generateButton);
 
@@ -128,11 +140,61 @@ public class PathFindApp extends Application {
                 } else if (node.equals(grid.getStartNode())) {
                     rect.setFill(Color.LIGHTGREEN); // START
                 } else if (node.equals(grid.getEndNode())) {
-                    rect.setFill(Color.RED); // KONIEC
+                    rect.setFill(Color.RED); // End Point
                 } else {
                     rect.setFill(Color.WHITE);
                 }
             }
         }
     }
+
+    private void runPathfinding(Object pathfinder) {
+        updateGrid();
+
+        if (startNode == null || endNode == null) {
+            System.out.println("Set start and end point first!.");
+            return;
+        }
+
+        List<Node> visited = new ArrayList<>();
+        List<Node> path;
+
+        if (pathfinder instanceof DijkstraPathfinder) {
+            ((DijkstraPathfinder) pathfinder).setVisitedCallback(visited::add);
+            path = ((DijkstraPathfinder) pathfinder).findPath();
+        } else if (pathfinder instanceof AStarPathfinder) {
+            ((AStarPathfinder) pathfinder).setVisitedCallback(visited::add);
+            path = ((AStarPathfinder) pathfinder).findPath();
+        } else {
+            return;
+        }
+
+        // Animated visited nodes
+        Timeline timeline = new Timeline();
+        int delay = 15;
+        for (int i = 0; i < visited.size(); i++) {
+            Node node = visited.get(i);
+            if (node.equals(startNode) || node.equals(endNode)) continue;
+
+            KeyFrame kf = new KeyFrame(Duration.millis(i * delay), e -> {
+                nodes[node.getY()][node.getX()].setFill(Color.LIGHTBLUE);
+            });
+            timeline.getKeyFrames().add(kf);
+        }
+
+        // Animate found Path
+        int pathStart = visited.size();
+        for (int i = 0; i < path.size(); i++) {
+            Node node = path.get(i);
+            if (node.equals(startNode) || node.equals(endNode)) continue;
+
+            KeyFrame kf = new KeyFrame(Duration.millis((pathStart + i) * delay), e -> {
+                nodes[node.getY()][node.getX()].setFill(Color.LIMEGREEN);
+            });
+            timeline.getKeyFrames().add(kf);
+        }
+
+        timeline.play();
+    }
+
 }

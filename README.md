@@ -17,7 +17,7 @@ A simple and interactive visualization tool for **Dijkstra** and **A\*** pathfin
 
 ## 📸 Preview
 
-
+https://github.com/pawel-rachocki/Pathfinding-Visualizer-Java/blob/main/PathFindApp.png?raw=true
 
 ---
 
@@ -29,10 +29,40 @@ A simple and interactive visualization tool for **Dijkstra** and **A\*** pathfin
 - JavaFX SDK
 - IDE like IntelliJ or Eclipse (with JavaFX configured)
 
-### How to Run
+🕹️ How to Use
 
-1. Clone the repo:
+    🟩 Set Start Point – click the button and then click on a grid cell.
 
-```bash
-git clone https://github.com/yourusername/pathfinder-javafx.git
-cd pathfinder-javafx
+    🟥 Set End Point – same as above, but for the end node.
+
+    ⚫ Add/Delete Obstacles – click cells to toggle walls.
+
+    🧠 Run Dijkstra / A* – start the selected algorithm.
+
+    🎲 Generate Grid – fills grid with random obstacles.
+
+    ♻️ Reset Grid – clears everything on the board.
+
+    🧮 Change Grid Size – enter a number and click "Apply Size".
+
+🧱 Project Structure
+
+src/
+│
+├── PathFindApp.java          # Main application with UI
+├── Grid.java                 # Logical grid with nodes
+├── Node.java                 # Individual cell with state
+├── DijkstraPathfinder.java  # Dijkstra algorithm implementation
+├── AStarPathfinder.java     # A* algorithm implementation
+└── HeuristicType.java       # Enum for heuristic types (e.g. EUCLIDEAN)
+
+🛠️ To Do
+
+  Add BFS / DFS options
+  Export path or grid to file
+  Add diagonal movement support
+  Add animation speed slider
+
+📄 License
+
+This project is open-source

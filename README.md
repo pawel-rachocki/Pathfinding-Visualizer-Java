@@ -65,4 +65,4 @@ src/
 
 📄 License
 
-This project is open-source
+This project is for educational purposes.

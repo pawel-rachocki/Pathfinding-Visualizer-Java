@@ -17,7 +17,7 @@ A simple and interactive visualization tool for **Dijkstra** and **A\*** pathfin
 
 ## 📸 Preview
 
-https://github.com/pawel-rachocki/Pathfinding-Visualizer-Java/blob/main/PathFindApp.png?raw=true
+![Image Alt](https://github.com/pawel-rachocki/Pathfinding-Visualizer-Java/blob/main/PathFindApp.png?raw=true)
 
 ---
 
